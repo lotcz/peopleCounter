@@ -16,9 +16,8 @@ public class Main {
      */
     public static void main(String[] args) {
         Controller controller = new Controller();
-        controller.processPicture(new PictureItem("TEST"));
-        controller.processPicture(new PictureItem("22222"));
-        controller.processPicture(new PictureItem("333 333 333"));
+        controller.processPicturesFolder("C:\\develop\\peopleCounter\\test\\pictures");
+        
     }
     
 }
