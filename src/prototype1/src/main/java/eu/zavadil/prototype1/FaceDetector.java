@@ -103,8 +103,13 @@ public class FaceDetector implements Runnable {
                 JSONObject response_json = new JSONObject(response.toString());                
                 //System.out.println(response_json);
                 //System.out.println(response_json.getInt("time_used"));
-                picture.faces_detected = response_json.getJSONArray("faces").length();
+                JSONArray faces_array = response_json.getJSONArray("faces");
                 
+                for (int i = 0, max = faces_array.length(); i < max; i++) {
+                    JSONObject face_object = faces_array.getJSONObject(i);                    
+                    picture.faces_detected.add(new PictureFace(face_object.getString("face_token")));
+                }
+                                
             } catch (Exception e) {
                 BufferedReader ine = new BufferedReader(new InputStreamReader(con.getErrorStream()));
                 String error_line;

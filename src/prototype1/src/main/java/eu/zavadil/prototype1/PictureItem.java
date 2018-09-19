@@ -6,8 +6,9 @@ package eu.zavadil.prototype1;
 public class PictureItem {
     
     public String path;
-    public int faces_detected = 0;
-    public int faces_matched = 0;
+    public FacesCollection faces_detected = new FacesCollection();
+    public FacesCollection faces_matched = new FacesCollection();
+    public FacesCollection faces_unmatched = new FacesCollection();
     
     PictureItem(String image_path) {
         path = image_path;
@@ -15,7 +16,7 @@ public class PictureItem {
     
     @Override
     public String toString() {
-        return String.format("PictureItem [%s] DETECTED: %d, MATCHED: %d", path, faces_detected, faces_matched);
+        return String.format("PictureItem [%s] DETECTED: %d, UNMATCHED: %d", path, faces_detected.size(), faces_unmatched.size());
     }
     
 }

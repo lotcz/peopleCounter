@@ -7,6 +7,8 @@ import java.io.File;
  */
 public class Controller {
 
+    public FacesCollection unique_faces = new FacesCollection();
+    
     Controller() {
 
     }
@@ -85,7 +87,9 @@ public class Controller {
 
     void onFacesDetected(PictureItem picture) {
         System.out.println("Controller: Image face detection completed " + picture);
-        processMatchingQueue(picture);
+        if (picture.faces_detected.size() > 0) {
+            processMatchingQueue(picture);
+        }
         processDetectionQueue(null);
     }
 
@@ -137,12 +141,14 @@ public class Controller {
 
         };
 
-        matcher = new FaceMatcher(picture, on_success, on_error);
+        matcher = new FaceMatcher(picture, unique_faces, on_success, on_error);
         matcher.start();
     }
 
     void onFacesMatched(PictureItem picture) {
         System.out.println("Controller: Image face matching completed " + picture);
+        unique_faces.addAll(picture.faces_unmatched);
+        System.out.println("Controller: Unique faces - " + unique_faces.size());
         processMatchingQueue(null);
     }
 
