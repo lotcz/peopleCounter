@@ -123,10 +123,10 @@ public class FaceMatcher implements Runnable {
         // End of multipart/form-data.
         writer.append("--" + boundary + "--").append(CRLF).flush();
 
-        System.out.println("\nSending 'POST' request to URL : " + url);
+        //System.out.println("\nSending 'POST' request to URL : " + url);
         //System.out.println("Post parameters : " + urlParameters);
-        System.out.println("Response Code : " + con.getResponseCode());
-        System.out.println("Response Message : " + con.getResponseMessage());
+        //System.out.println("Response Code : " + con.getResponseCode());
+        //System.out.println("Response Message : " + con.getResponseMessage());
 
         try {
 
@@ -145,7 +145,9 @@ public class FaceMatcher implements Runnable {
             
             float confidence = response_json.getFloat("confidence");
             
-            if (confidence > 70) {
+            System.out.println(String.format("FaceMatcher: Face matching complete(%s,%s) confidence: %f", face1.name, face2.name, confidence));
+            
+            if (confidence > 90) {
                 faces_match = true;
             }
 

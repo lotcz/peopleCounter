@@ -107,7 +107,8 @@ public class FaceDetector implements Runnable {
                 
                 for (int i = 0, max = faces_array.length(); i < max; i++) {
                     JSONObject face_object = faces_array.getJSONObject(i);                    
-                    picture.faces_detected.add(new PictureFace(face_object.getString("face_token")));
+                    String face_name = new File(picture.path).getName() + "." + i;
+                    picture.faces_detected.add(new PictureFace(face_name, face_object.getString("face_token")));
                 }
                                 
             } catch (Exception e) {
