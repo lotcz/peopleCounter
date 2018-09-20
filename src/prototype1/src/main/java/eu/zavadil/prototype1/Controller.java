@@ -1,159 +1,170 @@
 package eu.zavadil.prototype1;
 
 import java.io.File;
+import eu.zavadil.prototype1.model.*;
 
 /**
- * Core of peopleCounter.
+ * Core of peopleCounter. 
+ * This central object keeps track of running session and manages processing of all pictures and faces for the session.
  */
 public class Controller {
-
-    public FacesCollection unique_faces = new FacesCollection();
     
+    private final ControllerSettings settings;
+    
+    /**
+     * Will create controller instance with default settings.
+     */
     Controller() {
-
+        this(new ControllerSettings());
     }
+        
+    /**
+     * Provide your own settings for Controller.
+     * @param controller_settings 
+     */
+    Controller(ControllerSettings controller_settings) {
+        settings = controller_settings;
+        detector = new FaceDetector(this, settings.getFaceDetectorSettings());
+        matcher = new FaceMatcher(this, settings.getFaceMatcherSettings());
+    }
+    
+    /* SESSION */
+    
+    /**
+     * Current active session. All new pictures are automatically put here.
+     * If there is no session a new pictures are sent for processing, new session is automatically created.
+     */
+    private Session current_session;
+    
+    public Session getCurrentSession() {
+        if (current_session == null) {
+            startNewSession();
+        }
+        return current_session;
+    }
+    
+    /**
+     * Close running session if there is any and return it.
+     * @return Closed session.
+     */
+    public Session closeCurrentSession() {
+        Session closed_session = null;
+        if (current_session != null) {
+            closed_session = current_session;
+            current_session = null;
+        }
+        return closed_session;
+    }
+    
+    /**
+     * Resume a session. If there is a session in progress, then it is closed before resuming.
+     * @param session Session to be resumed.
+     * @return Closed session if there was any.
+     */
+    public Session resumeSession(Session session) {
+        Session closed_session = closeCurrentSession();
+        if (session == null) {
+            current_session = new Session();
+        } else {
+            current_session = session;
+        }
+        return closed_session;
+    }
+    
+    /**
+     * Start a new session. If there is a session in progress, then it is closed and returned.
+     * @return Closed session if there was any.
+     */
+    public Session startNewSession() {
+        Session closed_session = closeCurrentSession();        
+        current_session = new Session();        
+        return closed_session;        
+    }
+    
+    /* PICTURE PROCESSING */
 
     public void processPicturesFolder(String path) {
         File folder = new File(path);
         File[] files = folder.listFiles();
 
-        for (int i = 0; i < files.length; i++) {
-            if (files[i].isFile()) {
-                processPictureFile(files[i].getPath());
-            } else if (files[i].isDirectory()) {
-                System.out.println("Directory " + files[i].getName());
+        for (File file: files) {
+            if (file.isFile()) {
+                processPictureFile(file.getPath());
+            } else if (file.isDirectory()) {
+                // TO DO: process subdirectories?
+                //System.out.println("Directory " + file.getName());
             }
         }
-
     }
 
     public void processPictureFile(String path) {
-        processPicture(new PictureItem(path));
+        processPicture(new Picture(path));
     }
 
-    private void processPicture(PictureItem picture) {
+    private void processPicture(Picture picture) {
         System.out.println("Controller: Processing image " + picture);
-        processDetectionQueue(picture);
+        detectFaces(picture);
     }
 
     /* FACE DETECTION */
+    
     private FaceDetector detector;
-    private final PicturesQueue detection_queue = new PicturesQueue();
-
-    private void processDetectionQueue(PictureItem picture) {
-        if (detector == null) {
-            if (!detection_queue.isEmpty()) {
-                if (picture != null) {
-                    detection_queue.enqueue(picture);
-                }
-                picture = detection_queue.dequeue();
-            }
-            if (picture != null) {
-                detectFaces(picture);
-            }
-        } else {
-            if (picture != null) {
-                detection_queue.enqueue(picture);
-            }
-        }
+    
+    /**
+     * Send picture to face detection processing.
+     * @param picture 
+     */
+    void detectFaces(Picture picture) {
+        detector.processPicture(picture);
     }
 
-    void detectFaces(PictureItem picture) {
-
-        Runnable on_success = new Runnable() {
-
-            @Override
-            public void run() {
-                detector = null;
-                onFacesDetected(picture);
-            }
-
-        };
-
-        Runnable on_error = new Runnable() {
-
-            @Override
-            public void run() {
-                detector = null;
-                onFacesDetectionError(picture);
-            }
-
-        };
-
-        detector = new FaceDetector(picture, on_success, on_error);
-        detector.start();
-
-    }
-
-    void onFacesDetected(PictureItem picture) {
+    /**
+     * This is called from FaceDetector when faces in a picture are successfully detected.
+     * Successfully means that there were no errors or exceptions, not that any faces were detected.
+     * @param picture 
+     */
+    void onFacesDetected(Picture picture) {
         System.out.println("Controller: Image face detection completed " + picture);
-        if (picture.faces_detected.size() > 0) {
-            processMatchingQueue(picture);
+        for (Face face: picture.faces_detected) {            
+            matchFace(face);
         }
-        processDetectionQueue(null);
     }
-
-    void onFacesDetectionError(PictureItem picture) {
-        System.out.println("Controller: Image face detection failed " + picture);
-        processDetectionQueue(null);
-    }
-
+    
     /* FACE MATCHING */
-    private final PicturesQueue matching_queue = new PicturesQueue();
+ 
     private FaceMatcher matcher;
 
-    private void processMatchingQueue(PictureItem picture) {
-        if (matcher == null) {
-            if (!matching_queue.isEmpty()) {
-                if (picture != null) {
-                    matching_queue.enqueue(picture);
-                }
-                picture = matching_queue.dequeue();
-            }
-            if (picture != null) {
-                matchFaces(picture);
-            }
-        } else {
-            if (picture != null) {
-                matching_queue.enqueue(picture);
-            }
-        }
+    /**
+     * Send face to face matching processing.
+     * @param picture 
+     */
+    void matchFace(Face face) {        
+        matcher.processFace(face);
     }
 
-    void matchFaces(PictureItem picture) {
-        Runnable on_success = new Runnable() {
-
-            @Override
-            public void run() {
-                matcher = null;
-                onFacesMatched(picture);
-            }
-
-        };
-
-        Runnable on_error = new Runnable() {
-
-            @Override
-            public void run() {
-                matcher = null;
-                onFaceMatchingError(picture);
-            }
-
-        };
-
-        matcher = new FaceMatcher(picture, unique_faces, on_success, on_error);
-        matcher.start();
+    /**
+     * This is called from FaceMatcher submodule when face matching for a picture is successfully finished.
+     * @param picture 
+     */
+    void onFaceMatched(Face face) {
+        System.out.println("Controller: Image face matching completed " + face);        
+        System.out.println("Controller: Unique faces - " + getCurrentSession().unique_faces.size());        
     }
-
-    void onFacesMatched(PictureItem picture) {
-        System.out.println("Controller: Image face matching completed " + picture);
-        unique_faces.addAll(picture.faces_unmatched);
-        System.out.println("Controller: Unique faces - " + unique_faces.size());
-        processMatchingQueue(null);
+    
+    /**
+     * This is called from any submodule (e.g. FaceDetector) when an error occurs.
+     * 
+     * @param error_source Name of the source of the error. E.g. name of submodule.
+     * @param error_message 
+     */
+    void onError(String error_source, String error_message) {
+        MessageBuilder builder = new MessageBuilder();
+        builder.appendLine("ERROR:");
+        builder.appendLine("------");
+        builder.appendLine("Source", error_source);
+        builder.appendLine("Message:");
+        builder.appendLine(error_message);
+        System.out.println(builder.toString());        
     }
-
-    void onFaceMatchingError(PictureItem picture) {
-        System.out.println("Controller: Image face matching failed " + picture);
-        processMatchingQueue(null);
-    }
+    
 }

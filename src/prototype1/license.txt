@@ -1,4 +1,0 @@
-/**
-* 
-peopleCounter by Karel Zavadil
-*/
