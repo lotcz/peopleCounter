@@ -7,9 +7,7 @@ import eu.zavadil.prototype1.model.Face;
  */
 public class FaceMatchingResult {
     public boolean is_ok = true;
-    
-    public boolean face_match = false;
-    
+        
     public final Face face;
     
     public String error_message;

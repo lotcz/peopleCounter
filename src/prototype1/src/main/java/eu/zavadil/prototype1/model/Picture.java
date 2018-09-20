@@ -16,7 +16,7 @@ public class Picture {
     
     @Override
     public String toString() {
-        return String.format("PictureItem [%s] DETECTED: %d, UNMATCHED: %d", path, faces_detected.size(), faces_unmatched.size());
+        return String.format("Picture [%s] DETECTED: %d, UNMATCHED: %d", path, faces_detected.size(), faces_unmatched.size());
     }
     
 }

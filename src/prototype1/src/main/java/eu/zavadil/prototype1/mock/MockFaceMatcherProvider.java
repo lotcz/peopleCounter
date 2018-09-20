@@ -18,10 +18,10 @@ public class MockFaceMatcherProvider extends FaceppAPIService implements FaceMat
                     
         if (Math.random() > 0.5) {
             face.picture.faces_matched.add(face);
-            result.face_match = true;
+            face.matched = true;
         } else {
             face.picture.faces_unmatched.add(face);
-            result.face_match = false;
+            face.matched = false;
         }            
 
         return result;

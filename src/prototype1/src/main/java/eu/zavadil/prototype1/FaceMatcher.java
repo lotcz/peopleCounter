@@ -98,7 +98,7 @@ public class FaceMatcher {
     private void matchingComplete(FaceMatchingResult result) {
         matching_thread = null;
         if (result.is_ok) {
-            if (!result.face_match) {               
+            if (!result.face.matched) {               
                 controller.getCurrentSession().unique_faces.add(result.face);
             }
             controller.onFaceMatched(result.face);            
