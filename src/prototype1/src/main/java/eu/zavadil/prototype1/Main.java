@@ -11,10 +11,10 @@ public class Main {
        
         /* Face++ providers */
         settings.getFaceDetectorSettings().face_detection_provider = FaceDetectorProvidersEnum.FACEPP;
-        //settings.getFaceMatcherSettings().face_matching_provider = FaceMatcherProvidersEnum.FACEPP;
+        settings.getFaceMatcherSettings().face_matching_provider = FaceMatcherProvidersEnum.FACEPP;
                
         Controller controller = new Controller(settings);
-        controller.processPicturesFolder("C:\\develop\\peopleCounter\\test\\pictures\\set2");
+        controller.processPicturesFolder("C:\\develop\\peopleCounter\\test\\pictures\\set1");
         
     }
     

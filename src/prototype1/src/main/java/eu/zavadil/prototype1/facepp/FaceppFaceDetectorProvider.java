@@ -4,22 +4,23 @@ import eu.zavadil.prototype1.FaceDetectionResult;
 import eu.zavadil.prototype1.FaceDetectorProviderInterface;
 import eu.zavadil.prototype1.model.Face;
 import eu.zavadil.prototype1.model.Picture;
-import java.io.File;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 /**
  * Face++ web API provider for face detection.
  */
-public class FaceppFaceDetectorProvider extends FaceppAPIService implements FaceDetectorProviderInterface {
+public class FaceppFaceDetectorProvider implements FaceDetectorProviderInterface {
 
     @Override
     public FaceDetectionResult detectFaces(Picture picture) {
-        JSONObject response_json;
         FaceDetectionResult result = new FaceDetectionResult(picture);
-        AddFileParam("image_file", picture.path);
+
+        JSONObject response_json;
+        FaceppAPIService api = new FaceppAPIService();
+        api.addFileParam("image_file", picture.path);
         try {
-            response_json = callMethod("detect");
+            response_json = api.callMethod("detect");
             JSONArray faces_array = response_json.getJSONArray("faces");
                         
             for (int i = 0, max = faces_array.length(); i < max; i++) {

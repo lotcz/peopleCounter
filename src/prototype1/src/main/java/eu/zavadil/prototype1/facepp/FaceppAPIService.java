@@ -39,11 +39,15 @@ public class FaceppAPIService {
     
     protected HttpParamCollection http_params = new HttpParamCollection();
     
-    protected void AddTextParam(String param_name, String param_value) {
+    protected void resetParams() {
+        http_params.clear();
+    }
+    
+    public void addTextParam(String param_name, String param_value) {
         http_params.add(new HttpParam(param_name, param_value));
     }
     
-    protected void AddFileParam(String param_name, String file_path) {
+    public void addFileParam(String param_name, String file_path) {
         http_params.add(new HttpParam(param_name, file_path, HttpParamType.FILE));
     }
     
@@ -78,7 +82,7 @@ public class FaceppAPIService {
         }
     }
     
-    protected JSONObject callMethod(String method_name) throws Exception {
+    public JSONObject callMethod(String method_name) throws Exception {
         String url = getMethodUrl(method_name);
         URL url_obj = new URL(url);
         HttpsURLConnection con = (HttpsURLConnection) url_obj.openConnection();        

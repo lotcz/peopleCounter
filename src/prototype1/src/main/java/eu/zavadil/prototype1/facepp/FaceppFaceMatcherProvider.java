@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * Face++ web API provider for face matching.
  */
-public class FaceppFaceMatcherProvider extends FaceppAPIService implements FaceMatcherProviderInterface {
+public class FaceppFaceMatcherProvider implements FaceMatcherProviderInterface {
 
     /**
      * Default value of face_match.
@@ -26,7 +26,7 @@ public class FaceppFaceMatcherProvider extends FaceppAPIService implements FaceM
     public FaceMatchingResult matchFace(Face face, Session session) {
         
         FaceMatchingResult result = new FaceMatchingResult(face);
-        
+                
         try {
             boolean face_matched = face_match_by_default;
         
@@ -61,9 +61,10 @@ public class FaceppFaceMatcherProvider extends FaceppAPIService implements FaceM
      */
     private float facesMatch(Face face1, Face face2) throws Exception {
         JSONObject response_json;
-        AddTextParam("face_token1", face1.token);
-        AddTextParam("face_token2", face2.token);
-        response_json = callMethod("compare");        
+        FaceppAPIService api = new FaceppAPIService();
+        api.addTextParam("face_token1", face1.token);
+        api.addTextParam("face_token2", face2.token);
+        response_json = api.callMethod("compare");        
         return response_json.getFloat("confidence");
     }
 }
