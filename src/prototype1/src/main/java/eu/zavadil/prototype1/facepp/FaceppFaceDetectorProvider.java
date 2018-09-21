@@ -21,17 +21,16 @@ public class FaceppFaceDetectorProvider extends FaceppAPIService implements Face
         try {
             response_json = callMethod("detect");
             JSONArray faces_array = response_json.getJSONArray("faces");
-            String file_name = new File(result.picture.path).getName().split(".")[0];
-            
+                        
             for (int i = 0, max = faces_array.length(); i < max; i++) {
                 JSONObject face_object = faces_array.getJSONObject(i);
-                String face_name = file_name + "." + i;
+                String face_name = picture.name + "." + i;
                 result.picture.faces_detected.add(new Face(result.picture, face_name, face_object.getString("face_token")));
             }
 
         } catch (Exception e) {
             result.is_ok = false;
-            result.error_message = e.getMessage();
+            result.error_message = e.toString();
         }
         
         return result;

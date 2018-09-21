@@ -14,7 +14,7 @@ public class Main {
         //settings.getFaceMatcherSettings().face_matching_provider = FaceMatcherProvidersEnum.FACEPP;
                
         Controller controller = new Controller(settings);
-        controller.processPicturesFolder("C:\\develop\\peopleCounter\\test\\pictures\\set1");
+        controller.processPicturesFolder("C:\\develop\\peopleCounter\\test\\pictures\\set2");
         
     }
     
