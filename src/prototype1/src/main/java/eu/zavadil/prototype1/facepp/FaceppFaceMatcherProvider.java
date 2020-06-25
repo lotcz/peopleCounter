@@ -31,10 +31,13 @@ public class FaceppFaceMatcherProvider implements FaceMatcherProviderInterface {
             boolean face_matched = face_match_by_default;
         
             for(Face existing_face: session.unique_faces) {
-                
-                if (facesMatch(face, existing_face) >= min_confidence_to_match) {
-                    face_matched = true;
-                    break;
+                try {
+                    if (facesMatch(face, existing_face) >= min_confidence_to_match) {
+                        face_matched = true;
+                        break;
+                    }
+                } catch (Exception e) {
+                    System.out.println("Face matching ended with error: " + e);
                 }
             }
             
