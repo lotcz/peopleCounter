@@ -5,8 +5,9 @@
       repo: https://github.com/biometrics/openbr.git
       dest: /home/karel/openbr
       version: 'v1.1.0'
-      track_submodules : yes
-  - name: create build dir
+      update: yes
+      recursive: yes
+  - name: create openbr build dir
     file:
       path: /home/karel/openbr/build
       state: directory

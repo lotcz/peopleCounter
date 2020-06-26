@@ -1,6 +1,6 @@
 - hosts: opencv
   tasks:
-  - name: install prerequisites
+  - name: install opencv prerequisites
     become: yes
     package:
       name:
@@ -18,7 +18,7 @@
       repo: https://github.com/opencv/opencv.git
       dest: /home/karel/opencv
       version: '2.4'
-  - name: create build dir
+  - name: create opencv build dir
     file:
       path: /home/karel/opencv/build
       state: directory

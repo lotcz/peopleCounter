@@ -1,6 +1,6 @@
 - hosts: qt
   tasks:
-  - name: install prerequisites
+  - name: install qt prerequisites
     become: yes
     package:
       name:

@@ -1,0 +1,1 @@
+br -algorithm FaceRecognition -compare pictures/set2/photo1.jpg pictures/set2/photo2.jpg
