@@ -1,0 +1,11 @@
+- hosts: opencv
+  tasks:
+  - name: download opencv tests repo
+    git:
+      repo: https://github.com/opencv/opencv_extra.git
+      dest: /home/karel/opencv_extra
+      version: '2.4'
+  - name: set tests path
+    command: export OPENCV_TEST_DATA_PATH\=/home/karel/opencv_extra/testdata
+  - name: run tests
+    command: /home/karel/opencv/build/bin/opencv_test_core

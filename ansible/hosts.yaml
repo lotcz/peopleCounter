@@ -1,0 +1,16 @@
+all:
+  hosts:
+
+  children:
+
+    openbr:
+      hosts:
+        openbr-server.loc:
+
+    opencv:
+      children:
+        openbr:
+
+    qt:
+      children:
+        openbr:

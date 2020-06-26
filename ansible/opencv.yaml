@@ -1,0 +1,38 @@
+- hosts: opencv
+  tasks:
+  - name: install prerequisites
+    become: yes
+    package:
+      name:
+        - build-essential
+        - cmake
+        - git
+        - libgtk2.0-dev
+        - pkg-config
+        - libavcodec-dev
+        - libavformat-dev
+        - libswscale-dev
+      state: present
+  - name: download opencv repo
+    git:
+      repo: https://github.com/opencv/opencv.git
+      dest: /home/karel/opencv
+      version: '2.4'
+  - name: create build dir
+    file:
+      path: /home/karel/opencv/build
+      state: directory
+      mode: 0755
+  - name: cmake opencv
+    command: cmake -D CMAKE_BUILD_TYPE\=Release -D CMAKE_INSTALL_PREFIX\=/usr/local ..
+    args:
+      chdir: /home/karel/opencv/build
+  - name: make opencv
+    command: make -j4
+    args:
+      chdir: /home/karel/opencv/build
+  - name: make install opencv
+    command: make install
+    become: yes
+    args:
+      chdir: /home/karel/opencv/build

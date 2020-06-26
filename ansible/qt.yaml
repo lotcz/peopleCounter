@@ -1,0 +1,10 @@
+- hosts: qt
+  tasks:
+  - name: install prerequisites
+    become: yes
+    package:
+      name:
+        - qt5-default
+        - libqt5svg5-dev
+        - qtcreator
+      state: present

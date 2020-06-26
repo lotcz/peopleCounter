@@ -1,0 +1,26 @@
+- hosts: openbr
+  tasks:
+  - name: download openbr repo
+    git:
+      repo: https://github.com/biometrics/openbr.git
+      dest: /home/karel/openbr
+      version: 'v1.1.0'
+      track_submodules : yes
+  - name: create build dir
+    file:
+      path: /home/karel/openbr/build
+      state: directory
+      mode: 0755
+  - name: cmake openbr
+    command: cmake -D CMAKE_BUILD_TYPE\=Release ..
+    args:
+      chdir: /home/karel/openbr/build
+  - name: make openbr
+    command: make -j4
+    args:
+      chdir: /home/karel/openbr/build
+  - name: make install openbr
+    command: make install
+    become: yes
+    args:
+      chdir: /home/karel/openbr/build

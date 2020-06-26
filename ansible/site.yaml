@@ -1,0 +1,3 @@
+- import_playbook: qt.yaml
+- import_playbook: opencv.yaml
+- import_playbook: openbr.yaml
