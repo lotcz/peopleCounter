@@ -3,6 +3,15 @@
 #
 - hosts: qt
   tasks:
+  - name: backup sources.list
+    become: yes
+    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak
+  - name: put deb-src to sources.list
+    replace:
+      path: /etc/apt/sources.list
+      regexp: '^# deb-src'
+      replace: 'deb-src'
+      become: yes
   - name: install qt prerequisites
     become: yes
     package:
@@ -12,15 +21,12 @@
         - python
         - git
       state: present
-  - name: backup sources.list
-    become: yes
-    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak
-  - name: put deb-src to sources.list
-    become: yes
-    command: sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+  - name: update apt
+    apt:
+      update_cache: yes
   - name: install qt build prerequisites
     become: yes
-    command: apt-get update && apt-get build-dep qt5-default
+    command: apt-get build-dep qt5-default
     args:
       warn: no
   - name: download opencv repo
