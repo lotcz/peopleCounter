@@ -12,9 +12,12 @@
         - python
         - git
       state: present
-  - name: get deb-src to sources.list
+  - name: backup sources.list
     become: yes
-    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak && sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
+    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak
+  - name: put deb-src to sources.list
+    become: yes
+    command: sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
   - name: install qt build prerequisites
     become: yes
     command: apt-get update && apt-get build-dep qt5-default
