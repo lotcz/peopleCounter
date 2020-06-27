@@ -7,11 +7,11 @@
     become: yes
     command: cp /etc/apt/sources.list /etc/apt/sources.list.bak
   - name: put deb-src to sources.list
+    become: yes
     replace:
       path: /etc/apt/sources.list
       regexp: '^# deb-src'
       replace: 'deb-src'
-      become: yes
   - name: install qt prerequisites
     become: yes
     package:
