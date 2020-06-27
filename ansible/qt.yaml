@@ -12,9 +12,13 @@
         - python
         - git
       state: present
+  - name: get deb-src to sources.list
+    become: yes
+    command: cp /etc/apt/sources.list /etc/apt/sources.list.bak && sed -Ei 's/^# deb-src /deb-src /' /etc/apt/sources.list
   - name: install qt build prerequisites
     become: yes
-    command: apt-get build-dep qt5-default
+    command: apt-get update && apt-get build-dep qt5-default
+    warn: false
   - name: download opencv repo
     git:
       repo: git://code.qt.io/qt/qt5.git #https://code.qt.io/qt/qt5.git
