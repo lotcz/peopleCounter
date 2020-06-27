@@ -18,6 +18,7 @@
   - name: install qt build prerequisites
     become: yes
     command: apt-get update && apt-get build-dep qt5-default
+    args:
       warn: no
   - name: download opencv repo
     git:
