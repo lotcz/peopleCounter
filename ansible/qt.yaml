@@ -1,10 +1,35 @@
+# TODO: he problem is because of Qt 5.6. You need to install exactly Qt 5.4 version, and rebuild openbr using Qt 5.4.
+# https://groups.google.com/forum/#!topic/openbr-dev/wZqpSZtVkzY
+#
 - hosts: qt
   tasks:
   - name: install qt prerequisites
     become: yes
     package:
       name:
-        - qt5-default
-        - libqt5svg5-dev
-        - qtcreator
+        - build-essential
+        - perl
+        - python
+        - git
       state: present
+  - name: install qt build prerequisites
+    become: yes
+    command: apt-get build-dep qt5-default
+  - name: download opencv repo
+    git:
+      repo: git://code.qt.io/qt/qt5.git #https://code.qt.io/qt/qt5.git
+      dest: /home/karel/qt
+      version: '5.4'
+  - name: init qt repo
+    command: perl init-repository
+    args:
+      chdir: /home/karel/qt
+  - name: make qt
+    command: make -j4
+    args:
+      chdir: /home/karel/qt
+  - name: make install qt
+    command: make install
+    become: yes
+    args:
+      chdir: /home/karel/qt

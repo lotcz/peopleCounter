@@ -36,3 +36,10 @@
     become: yes
     args:
       chdir: /home/karel/opencv/build
+  - name: check opencv built files
+    stat:
+      path: /home/karel/opencv/build/bin/opencv_version
+    register: p
+   - assert:
+       that:
+         - p.stat.exists and p.stat.isfile
