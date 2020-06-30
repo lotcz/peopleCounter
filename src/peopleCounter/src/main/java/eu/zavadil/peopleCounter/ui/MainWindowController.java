@@ -110,11 +110,7 @@ public class MainWindowController extends WindowControllerBase {
     private ObservableListWrapper consoleList = new ObservableListWrapper(new LinkedList());
 
     public void writeToConsole(String str) {
-        Platform.runLater(new Runnable() {
-            @Override public void run() {
-                consoleList.add(str);
-            }
-        });
+        Platform.runLater(() -> consoleList.add(str));
     }
 
     // session
@@ -184,24 +180,28 @@ public class MainWindowController extends WindowControllerBase {
     }
 
     private void updateSessionUI() {
-        this.closeSessionMenuItem.setDisable(!this.hasActiveSession());
-        this.updateSessionDetailUI();
-        this.updatePicturesUI();
+        Platform.runLater(() -> {
+            this.closeSessionMenuItem.setDisable(!this.hasActiveSession());
+            this.updateSessionDetailUI();
+            this.updatePicturesUI();
+        });
     }
 
     private void updateSessionDetailUI() {
-        if (this.hasActiveSession()) {
-            sessionDetailPane.setDisable(false);
-            sessionDetailPane.setText(this.getActiveSession().getName());
+        Platform.runLater(() -> {
+            if (this.hasActiveSession()) {
+                sessionDetailPane.setDisable(false);
+                sessionDetailPane.setText(this.getActiveSession().getName());
 
-        } else {
-            sessionDetailPane.setDisable(true);
-            sessionDetailPane.setText("-- no session active --");
+            } else {
+                sessionDetailPane.setDisable(true);
+                sessionDetailPane.setText("-- no session active --");
 
-        }
-        uniqueFacesLabel.setText(String.valueOf(uniqueFacesCount));
-        picturesCountLabel.setText(String.valueOf(sessionPictureCount));
-        facesCountLabel.setText(String.valueOf(sessionFaceCount));
+            }
+            uniqueFacesLabel.setText(String.valueOf(uniqueFacesCount));
+            picturesCountLabel.setText(String.valueOf(sessionPictureCount));
+            facesCountLabel.setText(String.valueOf(sessionFaceCount));
+        });
     }
 
     // processing
@@ -244,6 +244,7 @@ public class MainWindowController extends WindowControllerBase {
 
     public void onPictureProcessed(Picture picture) {
         processedPictureCount = pictureDao.getSessionProcessedPictureCount(this.getActiveSession().getId());
+        sessionFaceCount = faceDao.getSessionFaceCount(this.getActiveSession().getId());
         this.updateProcessingUI();
         this.updatePicturesUI();
     }
@@ -253,25 +254,27 @@ public class MainWindowController extends WindowControllerBase {
         sessionFaceCount = faceDao.getSessionFaceCount(this.getActiveSession().getId());
         uniqueFacesCount = faceDao.getUniqeFaceCount(this.getActiveSession().getId());
         this.updateProcessingUI();
+        this.updateSessionDetailUI();
     }
 
     private void updateProcessingUI() {
-        startProcessingButton.setDisable(!this.hasActiveSession() || this.sessionProcessor.isProcessing());
-        stopProcessingButton.setDisable(!this.hasActiveSession() || !this.sessionProcessor.isProcessing());
-        resetProcessingButton.setDisable(!this.hasActiveSession() || this.sessionProcessor.isProcessing());
+        Platform.runLater(() -> {
+            startProcessingButton.setDisable(!this.hasActiveSession() || this.sessionProcessor.isProcessing());
+            stopProcessingButton.setDisable(!this.hasActiveSession() || !this.sessionProcessor.isProcessing());
+            resetProcessingButton.setDisable(!this.hasActiveSession() || this.sessionProcessor.isProcessing());
 
-        if (sessionPictureCount > 0) {
-            picturesProgressBar.setProgress(processedPictureCount / sessionPictureCount);
-        } else {
-            picturesProgressBar.setProgress(0);
-        }
+            if (sessionPictureCount > 0) {
+                picturesProgressBar.setProgress((double) processedPictureCount / sessionPictureCount);
+            } else {
+                picturesProgressBar.setProgress(0.0);
+            }
 
-        if (sessionFaceCount > 0) {
-            facesProgressBar.setProgress(processedFaceCount / sessionFaceCount);
-        } else {
-            facesProgressBar.setProgress(0);
-        }
-
+            if (sessionFaceCount > 0) {
+                facesProgressBar.setProgress((double) processedFaceCount / sessionFaceCount);
+            } else {
+                facesProgressBar.setProgress(0.0);
+            }
+        });
     }
 
     // pictures
@@ -291,14 +294,16 @@ public class MainWindowController extends WindowControllerBase {
     private TableColumn processedTableColumn;
 
     private void updatePicturesUI() {
-        if (this.hasActiveSession()) {
-            List<Picture> pictures = pictureDao.loadBySessionId(this.getActiveSession().getId());
-            picturesTableView.setItems(new ObservableListWrapper(pictures));
-            picturesTableView.setDisable(false);
-        } else {
-            picturesTableView.setDisable(true);
-            picturesTableView.setItems(null);
-        }
+        Platform.runLater(() -> {
+            if (this.hasActiveSession()) {
+                List<Picture> pictures = pictureDao.loadBySessionId(this.getActiveSession().getId());
+                picturesTableView.setItems(new ObservableListWrapper(pictures));
+                picturesTableView.setDisable(false);
+            } else {
+                picturesTableView.setDisable(true);
+                picturesTableView.setItems(null);
+            }
+        });
     }
 
 
@@ -308,7 +313,9 @@ public class MainWindowController extends WindowControllerBase {
     Button recordingButton;
 
     private void updateCaptureUI() {
-        this.recordingButton.setDisable(!this.hasActiveSession());
+        Platform.runLater(() -> {
+            this.recordingButton.setDisable(!this.hasActiveSession());
+        });
     }
 
 

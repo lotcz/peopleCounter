@@ -101,7 +101,7 @@
                                                       </HBox>
                                                    </left>
                                                    <right>
-                                                      <ProgressBar fx:id="facesProgressBar" maxWidth="1.7976931348623157E308" minWidth="20.0" progress="0.62" BorderPane.alignment="CENTER" />
+                                                      <ProgressBar fx:id="facesProgressBar" maxWidth="1.7976931348623157E308" minWidth="20.0" progress="0.54" BorderPane.alignment="CENTER" />
                                                    </right>
                                                 </BorderPane>
                                                 <BorderPane>
