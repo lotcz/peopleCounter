@@ -1,21 +1,33 @@
 package eu.zavadil.prototype1;
 
-public class Main {
-    
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
+public class Main extends Application {
+
+    @Override
+    public void start(Stage stage) throws IOException {
+        String javaVersion = System.getProperty("java.version");
+        String javafxVersion = System.getProperty("javafx.version");
+        Parent root = FXMLLoader.load(getClass().getResource("/ui/Main.fxml"));
+        Scene scene = new Scene(root, 640, 480);
+        stage.setTitle("Welcome");
+        stage.setScene(scene);
+        stage.show();
+    }
+
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
-        ControllerSettings settings = new ControllerSettings();
-       
-        /* Face++ providers */
-        settings.getFaceDetectorSettings().face_detection_provider = FaceDetectorProvidersEnum.FACEPP;
-        settings.getFaceMatcherSettings().face_matching_provider = FaceMatcherProvidersEnum.FACEPP;
-               
-        Controller controller = new Controller(settings);
-        controller.processPicturesFolder("C:\\develop\\peopleCounter\\test\\pictures\\set1");
-        
+        launch();
     }
     
 }

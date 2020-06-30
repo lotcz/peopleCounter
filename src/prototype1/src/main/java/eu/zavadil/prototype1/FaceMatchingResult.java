@@ -1,6 +1,6 @@
 package eu.zavadil.prototype1;
 
-import eu.zavadil.prototype1.model.Face;
+import eu.zavadil.prototype1.persistence.model.Face;
 
 /**
  * Result of face matching.

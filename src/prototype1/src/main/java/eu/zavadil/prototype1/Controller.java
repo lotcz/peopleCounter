@@ -1,7 +1,12 @@
 package eu.zavadil.prototype1;
 
 import java.io.File;
-import eu.zavadil.prototype1.model.*;
+
+import eu.zavadil.prototype1.core.Logger;
+import eu.zavadil.prototype1.core.MessageBuilder;
+import eu.zavadil.prototype1.face.FaceDetector;
+import eu.zavadil.prototype1.face.FaceMatcher;
+import eu.zavadil.prototype1.persistence.model.*;
 
 /**
  * Core of peopleCounter. 
@@ -10,20 +15,24 @@ import eu.zavadil.prototype1.model.*;
 public class Controller {
     
     private final ControllerSettings settings;
-    
+
+    private Logger logger;
+
     /**
      * Will create controller instance with default settings.
      */
-    Controller() {
-        this(new ControllerSettings());
+    Controller(Logger logger)
+    {
+        this(new ControllerSettings(), logger);
     }
         
     /**
      * Provide your own settings for Controller.
      * @param controller_settings 
      */
-    Controller(ControllerSettings controller_settings) {
-        settings = controller_settings;
+    public Controller(ControllerSettings controller_settings, Logger logger) {
+        this.logger = logger;
+        this.settings = controller_settings;
         detector = new FaceDetector(this, settings.getFaceDetectorSettings());
         matcher = new FaceMatcher(this, settings.getFaceMatcherSettings());
     }
@@ -34,51 +43,51 @@ public class Controller {
      * Current active session. All new pictures are automatically put here.
      * If there is no session a new pictures are sent for processing, new session is automatically created.
      */
-    private Session current_session;
+    private CountingSession current_Counting_session;
     
-    public Session getCurrentSession() {
-        if (current_session == null) {
+    public CountingSession getCurrentSession() {
+        if (current_Counting_session == null) {
             startNewSession();
         }
-        return current_session;
+        return current_Counting_session;
     }
     
     /**
      * Close running session if there is any and return it.
      * @return Closed session.
      */
-    public Session closeCurrentSession() {
-        Session closed_session = null;
-        if (current_session != null) {
-            closed_session = current_session;
-            current_session = null;
+    public CountingSession closeCurrentSession() {
+        CountingSession closed_Counting_session = null;
+        if (current_Counting_session != null) {
+            closed_Counting_session = current_Counting_session;
+            current_Counting_session = null;
         }
-        return closed_session;
+        return closed_Counting_session;
     }
     
     /**
      * Resume a session. If there is a session in progress, then it is closed before resuming.
-     * @param session Session to be resumed.
+     * @param countingSession Session to be resumed.
      * @return Closed session if there was any.
      */
-    public Session resumeSession(Session session) {
-        Session closed_session = closeCurrentSession();
-        if (session == null) {
-            current_session = new Session();
+    public CountingSession resumeSession(CountingSession countingSession) {
+        CountingSession closed_Counting_session = closeCurrentSession();
+        if (countingSession == null) {
+            current_Counting_session = new CountingSession();
         } else {
-            current_session = session;
+            current_Counting_session = countingSession;
         }
-        return closed_session;
+        return closed_Counting_session;
     }
     
     /**
      * Start a new session. If there is a session in progress, then it is closed and returned.
      * @return Closed session if there was any.
      */
-    public Session startNewSession() {
-        Session closed_session = closeCurrentSession();        
-        current_session = new Session();        
-        return closed_session;        
+    public CountingSession startNewSession() {
+        CountingSession closed_Counting_session = closeCurrentSession();
+        current_Counting_session = new CountingSession();
+        return closed_Counting_session;
     }
     
     /* PICTURE PROCESSING */
@@ -102,7 +111,7 @@ public class Controller {
     }
 
     private void processPicture(Picture picture) {
-        System.out.println("Controller: Processing image " + picture);
+        logger.log("Controller: Processing image " + picture.toString());
         detectFaces(picture);
     }
 
@@ -124,7 +133,7 @@ public class Controller {
      * @param picture 
      */
     void onFacesDetected(Picture picture) {
-        System.out.println("Controller: Image face detection completed " + picture);
+        logger.log("Controller: Image face detection completed " + picture.toString());
         for (Face face: picture.faces_detected) {            
             matchFace(face);
         }
@@ -147,8 +156,8 @@ public class Controller {
      * @param picture 
      */
     void onFaceMatched(Face face) {
-        System.out.println("Controller: Image face matching completed " + face);        
-        System.out.println("Controller: Unique faces - " + getCurrentSession().unique_faces.size());        
+        logger.log("Controller: Image face matching completed " + face.toString());
+        logger.log("Controller: Unique faces - " + getCurrentSession().unique_faces.size());
     }
     
     /**
@@ -164,7 +173,7 @@ public class Controller {
         builder.appendLine("Source", error_source);
         builder.appendLine("Message:");
         builder.appendLine(error_message);
-        System.out.println(builder.toString());        
+        logger.log(builder.toString());
     }
     
 }

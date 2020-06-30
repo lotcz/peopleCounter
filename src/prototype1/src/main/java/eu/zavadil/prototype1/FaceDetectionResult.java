@@ -1,6 +1,6 @@
 package eu.zavadil.prototype1;
 
-import eu.zavadil.prototype1.model.Picture;
+import eu.zavadil.prototype1.persistence.model.Picture;
 
 /**
  * Result of face detection.

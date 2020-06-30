@@ -1,0 +1,10 @@
+Button, .button {
+	-fx-padding: 5 10;
+	-fx-border-insets: 5;
+}
+
+.form HBox Label {
+	-fx-min-width: 100;
+	-fx-padding: 5;
+	-fx-border-insets: 5;
+}

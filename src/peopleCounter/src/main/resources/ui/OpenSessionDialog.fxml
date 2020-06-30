@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.zavadil.peopleCounter.ui.OpenSessionDialogController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <TableView fx:id="sessionsTableView" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+              <columns>
+                <TableColumn fx:id="nameColumn" editable="false" prefWidth="150.0" text="Name" />
+                  <TableColumn fx:id="pathColumn" editable="false" prefWidth="150.0" text="Path" />
+                <TableColumn fx:id="dateColumn" editable="false" minWidth="0.0" prefWidth="103.0" text="Date" />
+              </columns>
+               <columnResizePolicy>
+                  <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+               </columnResizePolicy>
+            </TableView>
+            <ButtonBar prefHeight="40.0" prefWidth="200.0">
+              <buttons>
+                <Button fx:id="selectButton" defaultButton="true" mnemonicParsing="false" onAction="#select" text="Select" />
+                  <Button mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+              </buttons>
+            </ButtonBar>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

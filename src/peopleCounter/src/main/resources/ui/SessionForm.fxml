@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="338.0" prefWidth="390.0" stylesheets="@style.css" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="eu.zavadil.peopleCounter.ui.SessionFormWindowController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" spacing="5.0" styleClass="form" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <HBox>
+               <children>
+                  <Label text="Name" />
+                  <TextField fx:id="nameTextField" prefWidth="149.0" promptText="Session name" />
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0">
+               <children>
+                  <Label text="Path" />
+                  <HBox spacing="10.0">
+                     <children>
+                        <TextField fx:id="pathTextField" prefWidth="247.0" promptText="Path where images are stored" />
+                        <Button mnemonicParsing="false" onAction="#selectPath" text="..." />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <Label fx:id="validationLabel" textFill="#9a3c3c" VBox.vgrow="ALWAYS" />
+         </children>
+         <padding>
+            <Insets top="5.0" />
+         </padding>
+      </VBox>
+      <HBox alignment="BOTTOM_CENTER" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+         <children>
+            <Button defaultButton="true" mnemonicParsing="false" onAction="#save" text="Save" textAlignment="CENTER" />
+            <Button layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin></Button>
+         </children>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+   </padding>
+</AnchorPane>
